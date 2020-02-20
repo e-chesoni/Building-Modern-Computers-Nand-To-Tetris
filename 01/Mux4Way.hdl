@@ -1,0 +1,33 @@
+//File name: projects/01/Mux4Way.hdl
+
+/**
+ * 4-Way Multiplexor:
+ * out = a if sel == 00
+ *       b if sel == 01
+ *       c if sel == 10
+ *       d if sel == 11
+ */
+
+CHIP Mux4Way {
+    IN a, b, c, d, sel[2];
+    OUT out;
+
+    PARTS:
+    Not (in=sel[0], out=notsel0);
+    Not (in=sel[1], out=notsel1);
+
+    And (a=notsel0, b=notsel1, out=sel00);
+    And (a=sel[0], b=notsel1, out=sel01);
+    And (a=notsel0, b=sel[1], out=sel10);
+    And (a=sel[0], b=sel[1], out=sel11);
+
+    And (a=a, b=sel00, out=val1);
+    And (a=b, b=sel01, out=val2);
+    And (a=c, b=sel10, out=val3);
+    And (a=d, b=sel11, out=val4);
+
+    Or (a=val1, b=val2, out=val1orval2);
+    Or (a=val3, b=val4, out=val3orval4);
+
+    Or (a=val1orval2, b=val3orval4, out=out);
+}
